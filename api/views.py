@@ -8,7 +8,11 @@ def index(request):
     return HttpResponse("Index page of apis")
 
 def create(request):
-    return HttpResponse(json.dumps(request.POST))
+    user_info = StaffUser(username=request.POST['username'],email=request.POST['email'],phonenum=request.POST['phonenum'],password=request.POST['password'])
+    user_info.save()
+
+
+    return HttpResponse('User %s created ' % user_info.username)
 
 def read(request):
     return HttpResponse("Read")
