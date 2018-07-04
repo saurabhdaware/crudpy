@@ -15,8 +15,8 @@ def create(request):
     response = {}
     response['username'] = user_info.username
     response['email'] = user_info.email
-    json.dumps(response)
-    return HttpResponse(response)
+    json_data = json.dumps(response)
+    return HttpResponse(json_data)
 
 def read(request):
     user_info = StaffUser.objects.all()
