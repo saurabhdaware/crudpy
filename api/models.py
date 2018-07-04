@@ -4,5 +4,5 @@ from django.db import models
 class StaffUser(models.Model):
     username = models.CharField(max_length=20)
     email = models.CharField(max_length=20)
-    phonenum = models.IntegerField(default=91)
+    phonenum = models.CharField(max_length=14)
     password = models.CharField(max_length=20)
