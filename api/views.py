@@ -12,8 +12,11 @@ def create(request):
     user_info = StaffUser(username=request.POST['username'],email=request.POST['email'],phonenum=request.POST['phonenum'],password=request.POST['password'])
     user_info.save()
 
-    return HttpResponse('User %s created ' % user_info.username)
-    values = []
+    response = {}
+    response['username'] = user_info.username
+    response['email'] = user_info.email
+    json.dumps(response)
+    return HttpResponse(response)
 
 def read(request):
     user_info = StaffUser.objects.all()
