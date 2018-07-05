@@ -23,8 +23,22 @@ def read(request):
     json_data = serializers.serialize('json', user_info)
     return HttpResponse(json_data)
 
-def update(request):
-    return HttpResponse("Update")
+def update(request,user_email):
+    data = {}
+    if(request.method == 'POST'):
+        user_info = StaffUser.objects.get(email=user_email)
+        if('password' in request.POST):
+            user_info.password = request.POST['password']
+        if('phonenum' in request.POST):
+            user_info.phonenum = request.POST['phonenum']
+        if('username' in request.POST):
+            user_info.username = request.POST['username']
+        user_info.save()
+        data['success'] = 'Data of %s edited successfully' % user_email
+        return HttpResponse(json.dumps(data))
+    else:
+        data['error']='Couldnt read the data on this route'
+        return HttpResponse(json.dumps(data))
 
 def delete(request):
     return HttpResponse("Delete")
