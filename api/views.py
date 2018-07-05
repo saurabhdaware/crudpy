@@ -35,13 +35,22 @@ def update(request,user_username):
         if('phonenum' in request.POST):
             user_info.phonenum = request.POST['phonenum']
         if('email' in request.POST):
-            user_info.username = request.POST['email']
+            user_info.email = request.POST['email']
         user_info.save()
-        data['success'] = 'Data of %s edited successfully' % user_email
+        data['success'] = 'Data of %s edited successfully' % user_username
         return HttpResponse(json.dumps(data))
     else:
         data['error']='Couldnt read the data on this route'
         return HttpResponse(json.dumps(data))
 
-def delete(request):
-    return HttpResponse("Delete")
+def delete(request,user_username):
+    response = {}
+    try:
+        user_info = StaffUser.objects.get(username=user_username)
+        user_info.delete()
+        response['success'] = '%s succesfully deleted from database'%user_username
+        return HttpResponse(json.dumps(response))
+    except:
+        response['error'] = '%s User not present in database'%user_username
+        return HttpResponse(json.dumps(response))
+    
