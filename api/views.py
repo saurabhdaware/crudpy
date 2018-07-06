@@ -8,18 +8,29 @@ from django.core import serializers
 def index(request):
     return HttpResponse("Index page of apis")
 
+def validate(request):
+    username = request.POST['username']
+    email = request.POST['email']
+    phonenum = request.POST['phonenum']
+    password = request.POST['password'] # Hash password here
+    if(username.strip() == '' or len(username)>20):
+        return False
+    else:
+        return True
+
+
 def create(request):
     response = {}
-    if(request.method == 'POST'):
+    if(request.method == 'POST' and validate(request)):
         user_info = StaffUser(username=request.POST['username'],email=request.POST['email'],phonenum=request.POST['phonenum'],password=request.POST['password'])
         user_info.save()
         response['username'] = user_info.username
         response['email'] = user_info.email
-        json_data = json.dumps(response)
-        return HttpResponse(json_data)
+        return JsonResponse(response)
     else:
-        response['error'] = 'Couldnt read the data of user'
-        return HttpResponse(json.dumps(response))
+        response['error'] = 'Couldnt read the data of user or validation failed'
+        return JsonResponse(response)
+
 
 def read(request):
     user_info = StaffUser.objects.all()
@@ -38,10 +49,10 @@ def update(request,user_username):
             user_info.email = request.POST['email']
         user_info.save()
         data['success'] = 'Data of %s edited successfully' % user_username
-        return HttpResponse(json.dumps(data))
+        return JsonResponse(data)
     else:
         data['error']='Couldnt read the data on this route'
-        return HttpResponse(json.dumps(data))
+        return JsonResponse(data)
 
 def delete(request,user_username):
     response = {}
@@ -49,8 +60,8 @@ def delete(request,user_username):
         user_info = StaffUser.objects.get(username=user_username)
         user_info.delete()
         response['success'] = '%s succesfully deleted from database'%user_username
-        return HttpResponse(json.dumps(response))
+        return JsonResponse(response)
     except:
         response['error'] = '%s User not present in database'%user_username
-        return HttpResponse(json.dumps(response))
+        return JsonResponse(response)
     
